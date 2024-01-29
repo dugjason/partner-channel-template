@@ -1,8 +1,10 @@
 
-import { Router, Request, Response, NextFunction } from 'express';
-import { createHmac } from 'crypto';
 import * as os from 'os';
-import { callbackHostname, frontSecret, randomString } from './server';
+import { createHmac } from 'crypto';
+import { Router, Request, Response, NextFunction } from 'express';
+
+import { env } from './env';
+import { randomString } from './server';
 
 const ChannelRouter = Router();
 
@@ -21,7 +23,7 @@ ChannelRouter.post('/', async (req: Request, res: Response) => {
     res.send(400).json({ type: 'bad_request', message: 'Unknown type sent to channel' });
   }
 
-  const webhookHostname = callbackHostname || os.hostname();
+  const webhookHostname = env.CALLBACK_HOSTNAME || os.hostname();
   const webhookId = randomString(16);
   const webhookUrl = `${webhookHostname}/front/${webhookId}`;
   console.log(`Creating webhook with URL ${webhookUrl} for channel with ID ${req.body.payload.channel_id}`);
@@ -117,7 +119,7 @@ function verifyFrontRequest(req: Request, res: Response, next: NextFunction) {
   const rawBody = JSON.stringify(req.body);
   const baseString = `${timestamp}:${rawBody}`;
 
-  const hmac = createHmac('sha256', frontSecret)
+  const hmac = createHmac('sha256', env.FRONT_SECRET)
     .update(baseString)
     .digest('base64');
     

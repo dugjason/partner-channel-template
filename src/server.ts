@@ -1,13 +1,8 @@
 import express from 'express';
-import ChannelRouter from './routes';
 import { randomBytes } from 'crypto';
+import { env } from './env';
+import ChannelRouter from './routes';
 import bodyParser from 'body-parser';
-
-export const frontId = 'yourFrontAppUID'; // The App UID of your Front app
-export const frontSecret = 'shhhhhhhhh';
-export const frontUrl = 'https://api2.frontapp.com'; // This URL subdomain might be different for your company
-export const callbackHostname = 'https://your-ngrok-hostnmae.ngrok.io';
-export const serverPort = '3000';
 
 export function randomString(length: number): string {
   return randomBytes(Math.floor(length / 2)).toString('hex');
@@ -19,6 +14,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(ChannelRouter);
 
-app.listen(serverPort, () => {
-  console.log(`Express server listening on port ${serverPort}`);
+app.listen(env.SERVER_PORT, () => {
+  console.log(`Express server listening on port ${env.SERVER_PORT}`);
 });

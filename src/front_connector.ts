@@ -1,7 +1,9 @@
-import * as jwt from 'jsonwebtoken';
-import * as moment from 'moment';
-import { frontId, frontSecret, frontUrl, randomString } from './server';
 import needle from 'needle';
+import * as moment from 'moment';
+import * as jwt from 'jsonwebtoken';
+
+import { env } from './env';
+import { randomString } from './server';
 
 export interface FrontSender {
     name?: string;
@@ -36,6 +38,7 @@ interface OutboundMessageRequest extends BaseMessageRequest {
     to: FrontSender;
 }
 
+const frontApiBaseUrl = 'https://api2.frontapp.com';
 
 export class FrontConnector {
   /**
@@ -43,9 +46,10 @@ export class FrontConnector {
 	 *
 	 * @param channelId ID of the channel to sync the message with
 	 * @returns
+   * @link https://dev.frontapp.com/reference/sync-inbound-message
 	 */
   static async importInboundMessage(channelId: string, payload: InboundMessageRequest) {
-    const endpoint = `${frontUrl}/channels/${channelId}/inbound_messages`;
+    const endpoint = `${frontApiBaseUrl}/channels/${channelId}/inbound_messages`;
     return this.makeChannelAPIRequest(channelId, endpoint, payload);
   }
 
@@ -54,9 +58,10 @@ export class FrontConnector {
 	 *
 	 * @param channelId ID of the channel to sync the message with
 	 * @returns
+   * @link https://dev.frontapp.com/reference/sync-outbound-message
 	 */
   static async importOutboundMessage(channelId: string, payload: OutboundMessageRequest) {
-    const endpoint = `${frontUrl}/channels/${channelId}/outbound_messages`;
+    const endpoint = `${env.FRONT_URL}/channels/${channelId}/outbound_messages`;
     return this.makeChannelAPIRequest(channelId, endpoint, payload);
   }
 
@@ -76,11 +81,18 @@ export class FrontConnector {
     };
   }
 
+  /**
+   * Builds a short-lived JWT you can use to issue requests to Front on behalf of a channel.
+   * Built using the Front ID and Front Secret credentials for your Partner Channel App.
+   * @param channelId - The cha_*** Front Channel ID of the created channel. 
+   * @returns Signed JWT which can be used to authenticate requests to Front.
+   * @link https://dev.frontapp.com/docs/getting-started-with-partner-channels#build-the-json-web-token
+   */
   static buildToken(channelId: string) {
-    const signature = frontSecret;
+    const signature = env.FRONT_SECRET;
     const exp = moment.utc(Date.now()).add('10', 'seconds').unix();
     const payload = {
-      iss: frontId,
+      iss: env.FRONT_ID,
       jti: randomString(8),
       sub: channelId,
       exp
