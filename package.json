@@ -19,6 +19,7 @@
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.13",
+		"@types/jsonwebtoken": "9.0.5",
 		"@types/needle": "^3.1.0",
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
