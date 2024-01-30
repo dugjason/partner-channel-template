@@ -5,7 +5,6 @@ export const env = createEnv({
   server: {
     FRONT_ID: z.string().min(1),
     FRONT_SECRET: z.string().min(1),
-    FRONT_URL: z.string().min(1).url(),
     CALLBACK_HOSTNAME: z.string().min(1).url(),
     SERVER_PORT: z.string().min(1),
   },
