@@ -29,7 +29,7 @@ You obtain the following values when you [create a channel type for an app](http
 ### Step 3: Start the development server
 
 ```shell
-pnpm run start
+pnpm run dev
 ```
 
 Once you have the development server running alongside the host that generates webhooks (for development purposes, this might be an `ngrok` proxy), you can [connect your channel to an inbox in Front](https://dev.frontapp.com/docs/getting-started-with-partner-channels#step-4-add-your-channel-in-front).

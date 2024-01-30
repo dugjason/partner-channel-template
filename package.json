@@ -4,6 +4,7 @@
 	"description": "Template channel for Front",
 	"license": "ISC",
 	"scripts": {
+		"dev": "env $(cat .env | grep -v '#' | xargs) ts-node ./src/server.ts",
 		"start": "ts-node ./src/server.ts",
 		"lint": "eslint . --ext .ts",
 		"lint:fix": "eslint . --ext .ts --fix"
@@ -23,9 +24,9 @@
 		"@types/needle": "^3.1.0",
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
-		"eslint": "^8.2.0",
+		"eslint": "^8.56.0",
 		"sandbox": "^0.8.6",
 		"ts-node": "^10.0.0",
-		"typescript": "^5"
+		"typescript": "^5.3.3"
 	}
 }
